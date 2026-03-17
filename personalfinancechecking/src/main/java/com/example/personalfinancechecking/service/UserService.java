@@ -3,10 +3,9 @@ package com.example.personalfinancechecking.service;
 import org.springframework.stereotype.Service;
 
 import com.example.personalfinancechecking.dto.UserDTO;
-import com.example.personalfinancechecking.entity.ApiResponse;
+import com.example.personalfinancechecking.entity.APIResponse;
 import com.example.personalfinancechecking.entity.User;
 import com.example.personalfinancechecking.repository.UserRepository;
-import java.util.List;
 
 @Service
 public class UserService {
@@ -16,33 +15,43 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public ApiResponse findById(Long id) {
+    public APIResponse findById(Long id) {
         User user = userRepository.findById(id).orElse(null);
         UserDTO userDTO = new UserDTO();
         if (user != null) {
-            userDTO = new UserDTO(user.getId(), user.getEmail(), user.getFullName());
-            return new ApiResponse(true, "User found", userDTO);
+            userDTO = new UserDTO(user.getUserId(), user.getEmail(), user.getFullName());
+            return new APIResponse(true, "User found", userDTO);
         } else {
-            return new ApiResponse(false, "User not found", null);
+            return new APIResponse(false, "User not found", null);
         }
     }
 
-    public ApiResponse findByEmail(String email) {
+    public APIResponse findByEmail(String email) {
         User user = userRepository.findByEmail(email).orElse(null);
         UserDTO userDTO = new UserDTO();
         if (user != null) {
-            userDTO = new UserDTO(user.getId(), user.getEmail(), user.getFullName());
-            return new ApiResponse(true, "User found", userDTO);
+            userDTO = new UserDTO(user.getUserId(), user.getEmail(), user.getFullName());
+            return new APIResponse(true, "User found", userDTO);
         } else {
-            return new ApiResponse(false, "User not found", null);
+            return new APIResponse(false, "User not found", null);
         }
     }
 
-    public User createUser(User user) {
-        return userRepository.save(user);
+    public APIResponse createUser(User user) {
+        boolean emailExists = userRepository.findByEmail(user.getEmail()).isPresent();
+        if (emailExists) {
+            return new APIResponse(false, "Email already exists", null);
+        }
+        if (user.getPassword()==null) {
+            return new APIResponse(false, "Password cant be null ", null);
+        }
+        user.setUserId(null);
+        user = userRepository.save(user);
+        return new APIResponse(true, "User created successfully", user);
     }
 
-    public List<User> getUsers() {
-        return userRepository.findAll();
+    public APIResponse getUsers() {
+        var user = userRepository.findAll();
+        return new APIResponse(true, "User created successfully", user);
     }
 }

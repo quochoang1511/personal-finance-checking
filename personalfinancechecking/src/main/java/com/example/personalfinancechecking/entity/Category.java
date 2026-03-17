@@ -1,9 +1,7 @@
 package com.example.personalfinancechecking.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;    
 import lombok.*;
-
 
 @Entity
 @Table(name = "categories")
@@ -13,21 +11,19 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class Category {
-@Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long categoryId;
 
-   @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    @NotNull(message = "User is required for category")
-    private User user;
+    private Long userId;
 
-    @NotBlank(message = "Category name is required")
-    @Column(unique = true, nullable = false)
-    private String name;  // ví dụ: "Ăn uống", "Lương", "Giải trí"
+    @Column(name = "type", columnDefinition = "NVARCHAR(50)")
+    private String type;
 
+    @Column(name = "name", columnDefinition = "NVARCHAR(255)")
+    private String name; 
+
+    @Column(name = "description", columnDefinition = "NVARCHAR(1000)")
     private String description;
-
-    @Enumerated(EnumType.STRING)
-    private TransactionType defaultType;
+  
 }

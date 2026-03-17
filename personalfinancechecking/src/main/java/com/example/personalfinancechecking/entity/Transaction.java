@@ -1,10 +1,7 @@
 package com.example.personalfinancechecking.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -16,30 +13,19 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class Transaction {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long transactionId;
 
-    @NotNull(message = "Amount is required")
-    @PositiveOrZero(message = "Amount must be non-negative")
-    @Column(precision = 15, scale = 2)
     private BigDecimal amount;
-
+    @Column(name = "description", columnDefinition = "NVARCHAR(50)")
     private String description;
 
-    @Column(nullable = false)
     private LocalDateTime transactionDate = LocalDateTime.now();
+    @Column(name = "type", columnDefinition = "NVARCHAR(50)")
+    private String type;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private TransactionType type;  // INCOME hoặc EXPENSE
+    private Long userId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private Category category;
+    private Long categoryId;
 }

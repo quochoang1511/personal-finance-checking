@@ -5,12 +5,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.personalfinancechecking.service.UserService;
 import com.example.personalfinancechecking.entity.User;
-import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import com.example.personalfinancechecking.entity.ApiResponse;
+import com.example.personalfinancechecking.entity.APIResponse;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -23,23 +22,23 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getUsers() {
+    public APIResponse getUsers() {
         return userService.getUsers();
     }
 
     @GetMapping("/{id}")
-    public ApiResponse getUserById(@PathVariable Long id) {
-         return userService.findById(id);
+    public APIResponse getUserById(@PathVariable Long id) {
+        return userService.findById(id);
     }
 
     @GetMapping("/email/{email}")
-    public ApiResponse getUserByEmail(@PathVariable String email) {
+    public APIResponse getUserByEmail(@PathVariable String email) {
         return userService.findByEmail(email);
     }
 
     @PostMapping
-    public User createUser(@RequestBody User user) {
+    public APIResponse createUser(@RequestBody User user) {
         return userService.createUser(user);
     }
-    
+
 }
