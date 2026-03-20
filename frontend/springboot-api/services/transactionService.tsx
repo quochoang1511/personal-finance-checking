@@ -4,6 +4,20 @@ import request from "../utils/baseURL";
 import { Transaction } from "../models/transactionModel";
 
 
+export const getTransactionByUserId = async (id: number): Promise<APIResponse<Transaction[]>> => {
+    try {
+        const response: AxiosResponse<APIResponse<Transaction[]>> = await request.get(`transactions/user/${id}`);
+        return response.data;
+
+    } catch (error) {
+        console.log(error);
+        return {
+            success: false,
+            message: "Lỗi khi lấy giao dich",
+            data: []
+        };
+    }
+}
 export const getTransaction = async () => {
     try {
         const response: AxiosResponse<APIResponse<Transaction>> = await request.get("transactions")
@@ -25,28 +39,25 @@ export const getTransaction = async () => {
     }
 }
 
-type CreateTransactionRequest = Omit<Transaction, "transactionId">
 
 export const addTransaction = async (
-    categoryRequest: CreateTransactionRequest
-): Promise<Transaction | null> => {
+    transactionRequest: Transaction
+)  => {
     try {
-        const response: AxiosResponse<Transaction> = await request.post(
-            "categories",
-            categoryRequest
+        const response: AxiosResponse<APIResponse<Transaction>> = await request.post(
+            "transactions",
+            transactionRequest
         )
-        return response.data
+        return response.data;
     } catch (error) {
         console.log(error)
         return null
     }
 }
 
-
 export const deleteTransaction = async (id: number) => {
     try {
-        const response: AxiosResponse<Transaction> = await request.delete(`transactions/${id}`);
-        console.log(response.data);
+        const response: AxiosResponse<APIResponse<Transaction>> = await request.delete(`transactions/${id}`);
         return response.data;
     } catch (error) {
         console.log(error);
@@ -59,9 +70,9 @@ type UpdateTransactionRequest = Omit<Transaction, "userId"> // backend might inf
 export const updateTransaction = async (
     id: number,
     transactionRequest: UpdateTransactionRequest
-): Promise<Transaction | null> => {
+) => {
     try {
-        const response: AxiosResponse<Transaction> = await request.put(
+        const response: AxiosResponse<APIResponse<Transaction>> = await request.put(
             `transactions/${id}`,
             transactionRequest
         )
@@ -72,3 +83,4 @@ export const updateTransaction = async (
         return null
     }
 }
+

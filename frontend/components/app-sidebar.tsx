@@ -14,9 +14,9 @@ import { cn } from "@/lib/utils"
 import { mockUser } from "@/lib/mock-data"
 
 const navigation = [
-  { name: "Tong quan", href: "/", icon: LayoutDashboard },
-  { name: "Giao dich", href: "/transactions", icon: Receipt },
-  { name: "Danh muc", href: "/categories", icon: Tags },
+  { name: "Tổng quan", href: "/", icon: LayoutDashboard },
+  { name: "Giao dịch", href: "/transactions", icon: Receipt },
+  { name: "Danh mục", href: "/categories", icon: Tags },
 ]
 
 export function AppSidebar() {
@@ -29,7 +29,7 @@ export function AppSidebar() {
         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-sidebar-primary">
           <Wallet className="h-5 w-5 text-sidebar-primary-foreground" />
         </div>
-        <span className="text-lg font-semibold">FinanceApp</span>
+        <span className="text-lg font-semibold">Finance App</span>
       </div>
 
       {/* Navigation */}
@@ -70,11 +70,11 @@ export function AppSidebar() {
         <div className="mt-3 flex gap-2">
           <button className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-sidebar-accent px-3 py-2 text-xs font-medium transition-colors hover:bg-sidebar-accent/80">
             <Settings className="h-4 w-4" />
-            Cai dat
+            Cài đặt
           </button>
           <button className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-sidebar-accent px-3 py-2 text-xs font-medium transition-colors hover:bg-sidebar-accent/80">
             <LogOut className="h-4 w-4" />
-            Dang xuat
+            Đăng xuất
           </button>
         </div>
       </div>

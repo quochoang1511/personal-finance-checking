@@ -1,14 +1,18 @@
 "use client"
 
-import { ArrowDownLeft, ArrowUpRight, ChevronRight } from "lucide-react"
+import { ArrowDownLeft, ArrowUpRight, ChevronRight, TrendingDown, TrendingUp } from "lucide-react"
 import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import type { Transaction } from "@/lib/types"
+import { Transaction } from "@/springboot-api/models/transactionModel"
+import { Category } from "@/springboot-api/models/categoryModel"
 
 interface RecentTransactionsProps {
-  transactions: Transaction[]
+  transactions: Transaction[],
+  categories: Category[]
+
 }
+
 
 function formatCurrency(amount: number) {
   return new Intl.NumberFormat("vi-VN", {
@@ -34,33 +38,45 @@ function formatDate(dateString: string) {
   yesterday.setDate(yesterday.getDate() - 1)
 
   if (date.toDateString() === today.toDateString()) {
-    return "Hom nay"
+    return "Hôm nay"
   }
   if (date.toDateString() === yesterday.toDateString()) {
-    return "Hom qua"
+    return "Hôm qua"
   }
   return date.toLocaleDateString("vi-VN", {
     day: "2-digit",
     month: "2-digit",
+    year: "2-digit"
   })
 }
 
-export function RecentTransactions({ transactions }: RecentTransactionsProps) {
+export function RecentTransactions({ transactions,
+  categories
+ }: RecentTransactionsProps) {
   const recentTransactions = [...transactions]
     .sort(
       (a, b) =>
         new Date(b.transactionDate).getTime() -
         new Date(a.transactionDate).getTime()
     )
-    .slice(0, 5)
+    .slice(0, 10)
 
+    const categoryNameById = new Map(
+      categories.map((c) => [c.categoryId, c.name] as const)
+    )
+    
+    const getCategoryName = (categoryId?: number) => {
+      if (!categoryId) return "Khác"
+      return categoryNameById.get(categoryId) ?? "Khác"
+    }
+    
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between pb-2 lg:pb-4">
-        <CardTitle className="text-base lg:text-lg">Giao dich gan day</CardTitle>
+        <CardTitle className="text-base lg:text-lg">Giao dịch</CardTitle>
         <Link href="/transactions">
           <Button variant="ghost" size="sm" className="h-8 text-xs lg:text-sm">
-            Xem tat ca
+            Xem tất cả
             <ChevronRight className="ml-1 h-3 w-3 lg:h-4 lg:w-4" />
           </Button>
         </Link>
@@ -70,7 +86,7 @@ export function RecentTransactions({ transactions }: RecentTransactionsProps) {
         <div className="space-y-2 lg:hidden">
           {recentTransactions.map((transaction) => (
             <div
-              key={transaction.id}
+              key={transaction.transactionId}
               className="flex items-center gap-3 rounded-xl bg-muted/50 p-3 transition-colors active:bg-muted"
             >
               <div
@@ -81,18 +97,18 @@ export function RecentTransactions({ transactions }: RecentTransactionsProps) {
                 }`}
               >
                 {transaction.type === "INCOME" ? (
-                  <ArrowDownLeft className="h-5 w-5 text-income" />
+                  <TrendingUp className="h-5 w-5 text-income" />
                 ) : (
-                  <ArrowUpRight className="h-5 w-5 text-expense" />
+                  <TrendingDown className="h-5 w-5 text-expense" />
                 )}
               </div>
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-medium">
-                  {transaction.description || transaction.category?.name}
+                  {transaction.description || "Không có mô tả"}
                 </p>
                 <div className="mt-0.5 flex items-center gap-2 text-xs text-muted-foreground">
-                  <span className="truncate">{transaction.category?.name}</span>
-                  <span className="shrink-0">·</span>
+                  <span className="truncate">{getCategoryName(transaction.categoryId)}</span>
+                  <span className="shrink-0">.</span>
                   <span className="shrink-0">{formatDate(transaction.transactionDate)}</span>
                 </div>
               </div>
@@ -114,7 +130,7 @@ export function RecentTransactions({ transactions }: RecentTransactionsProps) {
         <div className="hidden space-y-3 lg:block">
           {recentTransactions.map((transaction) => (
             <div
-              key={transaction.id}
+              key={transaction.transactionId}
               className="flex items-center justify-between rounded-lg border border-border bg-card p-4"
             >
               <div className="flex items-center gap-4">
@@ -126,17 +142,17 @@ export function RecentTransactions({ transactions }: RecentTransactionsProps) {
                   }`}
                 >
                   {transaction.type === "INCOME" ? (
-                    <ArrowDownLeft className="h-4 w-4 text-income" />
+                    <TrendingUp className="h-4 w-4 text-income" />
                   ) : (
-                    <ArrowUpRight className="h-4 w-4 text-expense" />
+                    <TrendingDown className="h-4 w-4 text-expense" />
                   )}
                 </div>
                 <div>
                   <p className="font-medium">
-                    {transaction.description || transaction.category?.name}
+                    {transaction.description ||"Không có mô tả"}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    {transaction.category?.name} -{" "}
+                    {getCategoryName(transaction.categoryId) || "Khác"} - {""}
                     {formatDate(transaction.transactionDate)}
                   </p>
                 </div>

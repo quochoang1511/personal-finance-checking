@@ -31,7 +31,7 @@ function formatCompactCurrency(amount: number) {
 export function StatsCards({ stats }: StatsCardsProps) {
   const cards = [
     {
-      title: "Thu nhap",
+      title: "Thu nhập",
       value: stats.totalIncome,
       icon: TrendingUp,
       color: "text-income",
@@ -39,7 +39,7 @@ export function StatsCards({ stats }: StatsCardsProps) {
       borderColor: "border-income/20",
     },
     {
-      title: "Chi tieu",
+      title: "Chi tiêu",
       value: stats.totalExpense,
       icon: TrendingDown,
       color: "text-expense",
@@ -47,7 +47,7 @@ export function StatsCards({ stats }: StatsCardsProps) {
       borderColor: "border-expense/20",
     },
     {
-      title: "So du",
+      title: "Số dư",
       value: stats.balance,
       icon: Wallet,
       color: stats.balance >= 0 ? "text-income" : "text-expense",
@@ -55,7 +55,7 @@ export function StatsCards({ stats }: StatsCardsProps) {
       borderColor: stats.balance >= 0 ? "border-income/20" : "border-expense/20",
     },
     {
-      title: "Giao dich",
+      title: "Giao dịch",
       value: stats.transactionCount,
       icon: Receipt,
       color: "text-primary",

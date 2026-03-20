@@ -22,74 +22,104 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-import { mockTransactions, mockCategories } from "@/lib/mock-data"
-import type {TransactionType } from "@/lib/types"
-import { Transaction } from "@/springboot-api/models/transactionModel"
-import { getTransaction } from "@/springboot-api/services/transactionService"
+
+import type { TransactionType } from "@/lib/types"
+import { Transaction, TransactionRequest } from "@/springboot-api/models/transactionModel"
+import { addTransaction, getTransactionByUserId, updateTransaction } from "@/springboot-api/services/transactionService"
+import { toast } from "sonner"
+import { Category } from "@/springboot-api/models/categoryModel"
+import { getCategory } from "@/springboot-api/services/categoryService"
 
 export default function TransactionsPage() {
+  const currentUserId = 1
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [isFormOpen, setIsFormOpen] = useState(false)
-  const [editingTransaction, setEditingTransaction] = useState<
-    Transaction | undefined
-  >()
+  const [editingTransaction, setEditingTransaction] = useState<Transaction | undefined>()
   const [searchQuery, setSearchQuery] = useState("")
   const [typeFilter, setTypeFilter] = useState<TransactionType | "ALL">("ALL")
 
+
   useEffect(() => {
     async function fetchTransactions() {
-      const response = await getTransaction();
-      if (response.success) {
+      const response = await getTransactionByUserId(currentUserId);
+      if (response?.success === true) {
         setTransactions(response.data as Transaction[] | []);
-        console.log(response.data)
+        toast.success(response.message);
       } else {
-        // toast.error(response.message);
+        toast.error(response.message);
       }
     }
     fetchTransactions();
   }, []);
 
+  const categoryNameById = new Map(
+    categories.map((c) => [c.categoryId, c.name] as const)
+  )
+
+  const getCategoryName = (categoryId?: number) => {
+    if (!categoryId) return "Khác"
+    return categoryNameById.get(categoryId) ?? "Khác"
+  }
+
+  useEffect(() => {
+    async function fetchCategories() {
+      const response = await getCategory(currentUserId);
+      if (response?.data) {
+        setCategories(response.data as Category[] | []);
+        console.log(response.data)
+      } else {
+         toast.error(response.message);
+      }
+    }
+    fetchCategories();
+  }, [])
 
   const filteredTransactions = transactions.filter((t) => {
     const matchesSearch =
-      t.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      t.category?.name.toLowerCase().includes(searchQuery.toLowerCase())
+      t.description?.toLowerCase().includes(searchQuery.toLowerCase())
     const matchesType = typeFilter === "ALL" || t.type === typeFilter
     return matchesSearch && matchesType
   })
 
-  const handleAddTransaction = (
-    data: Omit<Transaction, "id" | "userId" | "category">
-  ) => {
-    const newTransaction: Transaction = {
-      ...data,
-      id: Math.max(...transactions.map((t) => t.id)) + 1,
-      userId: 1,
-      category: mockCategories.find((c) => c.id === data.categoryId),
+  const transactionId = 1;
+
+  const handleAddTransaction = async (data: TransactionRequest) => {
+    if (!data.categoryId) {
+      toast.error("Vui lòng chọn danh mục")
+      return
     }
-    setTransactions([...transactions, newTransaction])
+    const requestBody = {
+      transactionId,
+      ...data,
+      userId: currentUserId,
+      description: data.description || "",
+      categoryId: data.categoryId ?? 0,
+    }
+    const result = await addTransaction(requestBody)
+    if (result?.success === true) {
+      setTransactions(prev => [...prev, result.data])
+      toast.success(result.message)
+    }
   }
 
-  const handleEditTransaction = (
-    data: Omit<Transaction, "id" | "userId" | "category">
-  ) => {
+  const handleEditTransaction = async (data: TransactionRequest) => {
     if (!editingTransaction) return
-    setTransactions(
-      transactions.map((t) =>
-        t.id === editingTransaction.id
-          ? {
-              ...t,
-              ...data,
-              category: mockCategories.find((c) => c.id === data.categoryId),
-            }
-          : t
+    const requestBody = {
+      ...editingTransaction,
+      ...data,
+    }
+    const result = await updateTransaction(editingTransaction.transactionId, requestBody)
+    if (result?.success === true) {
+      setTransactions(prev =>
+        prev.map(c => c.transactionId === result.data.transactionId ? result.data : c)
       )
-    )
-    setEditingTransaction(undefined)
+      toast.success(result.message)
+    }
   }
 
   const handleDeleteTransaction = (id: number) => {
-    setTransactions(transactions.filter((t) => t.id !== id))
+    setTransactions(prev => prev.filter(t => t.transactionId !== id))
   }
 
   const openEditForm = (transaction: Transaction) => {
@@ -112,23 +142,23 @@ export default function TransactionsPage() {
         {/* Header - Desktop */}
         <div className="mb-8 hidden items-center justify-between lg:flex">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Giao dich</h1>
+            <h1 className="text-3xl font-bold text-foreground">Giao dịch</h1>
             <p className="text-muted-foreground">
-              Quan ly cac giao dich thu chi cua ban
+             Quản lý  các giao dịch thu chi của bạn
             </p>
           </div>
           <Button onClick={() => setIsFormOpen(true)}>
             <Plus className="mr-2 h-4 w-4" />
-            Them giao dich
+            Thêm giao dịch
           </Button>
         </div>
 
         {/* Header - Mobile */}
         <div className="mb-4 flex items-center justify-between px-4 lg:hidden">
           <div>
-            <h1 className="text-xl font-bold text-foreground">Giao dich</h1>
+            <h1 className="text-xl font-bold text-foreground">Giao dịch</h1>
             <p className="text-sm text-muted-foreground">
-              {filteredTransactions.length} giao dich
+              {filteredTransactions.length} giao dịch
             </p>
           </div>
         </div>
@@ -138,7 +168,7 @@ export default function TransactionsPage() {
           <div className="relative flex-1 min-w-[200px] max-w-md">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Tim kiem giao dich..."
+              placeholder="Tìm kiếm giao dịch..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10"
@@ -156,9 +186,9 @@ export default function TransactionsPage() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="ALL">Tat ca</SelectItem>
-                <SelectItem value="INCOME">Thu nhap</SelectItem>
-                <SelectItem value="EXPENSE">Chi tieu</SelectItem>
+                <SelectItem value="ALL">Tất cả</SelectItem>
+                <SelectItem value="INCOME">Thu nhập</SelectItem>
+                <SelectItem value="EXPENSE">Chi tiêu</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -169,7 +199,7 @@ export default function TransactionsPage() {
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Tim kiem..."
+              placeholder="Tìm kiếm..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="h-10 pl-9 text-sm"
@@ -179,16 +209,16 @@ export default function TransactionsPage() {
             <SheetTrigger asChild>
               <Button variant="outline" size="icon" className="h-10 w-10 shrink-0">
                 <SlidersHorizontal className="h-4 w-4" />
-                <span className="sr-only">Bo loc</span>
+                <span className="sr-only">Bộ lọc</span>
               </Button>
             </SheetTrigger>
             <SheetContent side="bottom" className="rounded-t-xl">
               <SheetHeader>
-                <SheetTitle>Bo loc</SheetTitle>
+                <SheetTitle>Bộ lọc</SheetTitle>
               </SheetHeader>
               <div className="mt-4 space-y-4">
                 <div className="space-y-2">
-                  <p className="text-sm font-medium">Loai giao dich</p>
+                  <p className="text-sm font-medium">Loại giao dich</p>
                   <div className="grid grid-cols-3 gap-2">
                     {[
                       { value: "ALL", label: "Tat ca" },
@@ -218,6 +248,7 @@ export default function TransactionsPage() {
             transactions={filteredTransactions}
             onEdit={openEditForm}
             onDelete={handleDeleteTransaction}
+            getCategoryName={getCategoryName}
           />
         </div>
 
@@ -229,7 +260,7 @@ export default function TransactionsPage() {
             onClick={() => setIsFormOpen(true)}
           >
             <Plus className="h-6 w-6" />
-            <span className="sr-only">Them giao dich</span>
+            <span className="sr-only">Thêm giao dich</span>
           </Button>
         </div>
 
@@ -237,10 +268,11 @@ export default function TransactionsPage() {
         <TransactionForm
           open={isFormOpen}
           onOpenChange={closeForm}
-          categories={mockCategories}
+          categories={categories}
           transaction={editingTransaction}
           onSubmit={editingTransaction ? handleEditTransaction : handleAddTransaction}
         />
+
       </main>
     </div>
   )

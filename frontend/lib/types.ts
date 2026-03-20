@@ -14,16 +14,7 @@ export interface Category {
   defaultType: TransactionType
 }
 
-export interface Transaction {
-  id: number
-  amount: number
-  description?: string
-  transactionDate: string
-  type: TransactionType
-  userId: number
-  categoryId?: number
-  category?: Category
-}
+
 
 export interface DashboardStats {
   totalIncome: number

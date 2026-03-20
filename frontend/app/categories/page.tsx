@@ -25,7 +25,6 @@ import { toast } from "sonner"
 
 export default function CategoriesPage() {
   const currentUserId = 1 // TODO: replace with actual logged-in user id
-
   const [categories, setCategories] = useState<Category[]>([]);
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [editingCategory, setEditingCategory] = useState<Category | undefined>()
@@ -214,7 +213,7 @@ export default function CategoriesPage() {
               <CategoryList items={expenseCategories} emptyMessage="Chua co danh muc chi tieu nao" />
             </TabsContent>
             <TabsContent value="income" className="mt-0">
-              <CategoryList items={incomeCategories} emptyMessage="Chua co danh muc thu nhap nao" />
+              <CategoryList items={incomeCategories} emptyMessage="Chưa có danh mục thu nhập nào" />
             </TabsContent>
           </Tabs>
         </div>
@@ -228,13 +227,13 @@ export default function CategoriesPage() {
                 <TrendingUp className="h-4 w-4 text-income" />
               </div>
               <h2 className="text-lg font-semibold text-foreground">
-                Thu nhap
+                Thu nhập
               </h2>
               <Badge variant="secondary" className="ml-auto">
                 {incomeCategories.length}
               </Badge>
             </div>
-            <CategoryList items={incomeCategories} emptyMessage="Chua co danh muc thu nhap nao" />
+            <CategoryList items={incomeCategories} emptyMessage="Chưa có danh mục thu nhập nào" />
           </div>
 
           {/* Expense Categories */}
@@ -244,13 +243,13 @@ export default function CategoriesPage() {
                 <TrendingDown className="h-4 w-4 text-expense" />
               </div>
               <h2 className="text-lg font-semibold text-foreground">
-                Chi tieu
+                Chi tiêu
               </h2>
               <Badge variant="secondary" className="ml-auto">
                 {expenseCategories.length}
               </Badge>
             </div>
-            <CategoryList items={expenseCategories} emptyMessage="Chua co danh muc chi tieu nao" />
+            <CategoryList items={expenseCategories} emptyMessage="Chưa có danh mục chi tiêu nào" />
           </div>
         </div>
 
@@ -262,7 +261,7 @@ export default function CategoriesPage() {
             onClick={() => setIsFormOpen(true)}
           >
             <Plus className="h-6 w-6" />
-            <span className="sr-only">Them danh muc</span>
+            <span className="sr-only">Thêm danh mục</span>
           </Button>
         </div>
 

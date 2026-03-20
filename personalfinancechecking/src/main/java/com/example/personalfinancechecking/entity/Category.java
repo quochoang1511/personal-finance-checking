@@ -17,13 +17,13 @@ public class Category {
 
     private Long userId;
 
-    @Column(name = "type", columnDefinition = "NVARCHAR(50)")
+    @Column(name = "type")
     private String type;
 
-    @Column(name = "name", columnDefinition = "NVARCHAR(255)")
+    @Column(name = "name")
     private String name; 
 
-    @Column(name = "description", columnDefinition = "NVARCHAR(1000)")
+    @Column(name = "description", nullable = true)
     private String description;
   
 }

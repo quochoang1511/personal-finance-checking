@@ -2,7 +2,6 @@
 
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-
 interface CategoryChartProps {
   data: { name: string; value: number }[]
 }
@@ -39,7 +38,7 @@ export function CategoryChart({ data }: CategoryChartProps) {
   return (
     <Card>
       <CardHeader className="pb-2 lg:pb-4">
-        <CardTitle className="text-base lg:text-lg">Chi tieu theo danh muc</CardTitle>
+        <CardTitle className="text-base lg:text-lg">Chi tiêu theo danh mục</CardTitle>
       </CardHeader>
       <CardContent className="px-3 pb-3 lg:px-6 lg:pb-6">
         {/* Mobile: Horizontal bar list */}
@@ -75,7 +74,7 @@ export function CategoryChart({ data }: CategoryChartProps) {
           })}
           {data.length === 0 && (
             <p className="py-8 text-center text-sm text-muted-foreground">
-              Chua co du lieu chi tieu
+              Chưa có dữ liệu chi tiêu
             </p>
           )}
         </div>

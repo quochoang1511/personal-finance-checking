@@ -18,11 +18,11 @@ public class Transaction {
     private Long transactionId;
 
     private BigDecimal amount;
-    @Column(name = "description", columnDefinition = "NVARCHAR(50)")
+    @Column(name = "description", nullable = true)
     private String description;
 
     private LocalDateTime transactionDate = LocalDateTime.now();
-    @Column(name = "type", columnDefinition = "NVARCHAR(50)")
+    @Column(name = "type")
     private String type;
 
     private Long userId;

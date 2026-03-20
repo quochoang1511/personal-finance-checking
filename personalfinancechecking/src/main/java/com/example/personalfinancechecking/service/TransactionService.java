@@ -55,6 +55,21 @@ public class TransactionService {
         }
     }
 
+    public APIResponse getTransactionByUserId(Long id) {
+        try {
+            if (id == null || id <= 0) {
+                return new APIResponse(false, "ID UserUser không hợp lệ", null);
+            }
+            List<Transaction> transaction = transactionRepository.findByUserId(id);
+            if (transaction.isEmpty()) {
+                return new APIResponse(false, "Không tìm thấy giao dịch với người dùng có ID: " + id, null);
+            }
+            return new APIResponse(true, "Lấy thông tin giao dịch thành công", transaction);
+        } catch (Exception e) {
+            return new APIResponse(false, "Lỗi khi lấy giao dịch: " + e.getMessage(), null);
+        }
+    }
+
     public APIResponse getTransactionById(Long id) {
         try {
             if (id == null || id <= 0) {
@@ -71,7 +86,7 @@ public class TransactionService {
         }
     }
 
-    public APIResponse updateCategory(Long id, Transaction updatedTransaction) throws Exception {
+    public APIResponse updateTransaction(Long id, Transaction updatedTransaction) throws Exception {
         try {
             // Validation
             if (id == null || id <= 0) {
