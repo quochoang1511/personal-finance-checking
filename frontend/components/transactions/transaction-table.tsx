@@ -240,7 +240,7 @@ export function TransactionTable({
                   </TableCell>
                   <TableCell>
                     <Badge variant="secondary">
-                      {getCategoryName(transaction.categoryId) || "Khac"}
+                      {getCategoryName(transaction.categoryId) || "Khác"}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-muted-foreground">

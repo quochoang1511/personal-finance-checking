@@ -129,7 +129,7 @@ export default function CategoriesPage() {
               onClick={() => openEditForm(category)}
             >
               <Pencil className="h-4 w-4" />
-              <span className="sr-only">Chinh sua</span>
+              <span className="sr-only">Chỉnh sửa</span>
             </Button>
             <Button
               variant="ghost"
@@ -138,7 +138,7 @@ export default function CategoriesPage() {
               onClick={() => setDeletingCategoryId(category.categoryId)}
             >
               <Trash2 className="h-4 w-4" />
-              <span className="sr-only">Xoa</span>
+              <span className="sr-only">Xóa</span>
             </Button>
           </div>
         </div>
@@ -185,7 +185,7 @@ export default function CategoriesPage() {
           <div>
             <h1 className="text-xl font-bold text-foreground">Danh mục</h1>
             <p className="text-sm text-muted-foreground">
-              {categories.length}Danh mục
+              {categories.length} . Danh mục
             </p>
           </div>
         </div>

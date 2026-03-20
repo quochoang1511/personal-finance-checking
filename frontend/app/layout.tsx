@@ -8,21 +8,21 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'FinanceApp - Quan ly chi tieu ca nhan',
-  description: 'Ung dung quan ly tai chinh ca nhan - Theo doi thu chi, quan ly ngan sach hieu qua',
+  title: 'FinanceApp - Quản lý chi tiêu cá nhânnhân',
+  description: 'Ứng dụng quản lý thu chi cá nhân - Theo dõi thu chi, quản lý ngân sách hiệu quả',
   generator: 'v0.app',
   icons: {
     icon: [
       {
-        url: '/icon-light-32x32.png',
+        url: '/icon-bird.png',
         media: '(prefers-color-scheme: light)',
       },
       {
-        url: '/icon-dark-32x32.png',
+        url: '/icon-bird.png',
         media: '(prefers-color-scheme: dark)',
       },
       {
-        url: '/icon.svg',
+        url: '/icon-bird.svg',
         type: 'image/svg+xml',
       },
     ],

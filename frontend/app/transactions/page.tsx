@@ -53,14 +53,7 @@ export default function TransactionsPage() {
     fetchTransactions();
   }, []);
 
-  const categoryNameById = new Map(
-    categories.map((c) => [c.categoryId, c.name] as const)
-  )
 
-  const getCategoryName = (categoryId?: number) => {
-    if (!categoryId) return "Khác"
-    return categoryNameById.get(categoryId) ?? "Khác"
-  }
 
   useEffect(() => {
     async function fetchCategories() {
@@ -75,6 +68,14 @@ export default function TransactionsPage() {
     fetchCategories();
   }, [])
 
+  const categoryNameById = new Map(
+    categories.map((c) => [c.categoryId, c.name] as const)
+  )
+  
+  const getCategoryName = (categoryId?: number) => {
+    if (!categoryId) return "Khác"
+    return categoryNameById.get(categoryId) ?? "Khác"
+  }
   const filteredTransactions = transactions.filter((t) => {
     const matchesSearch =
       t.description?.toLowerCase().includes(searchQuery.toLowerCase())
@@ -212,18 +213,18 @@ export default function TransactionsPage() {
                 <span className="sr-only">Bộ lọc</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="bottom" className="rounded-t-xl">
+            <SheetContent side="bottom" className="rounded-t-xl mr-4 ml-4">
               <SheetHeader>
                 <SheetTitle>Bộ lọc</SheetTitle>
               </SheetHeader>
-              <div className="mt-4 space-y-4">
-                <div className="space-y-2">
-                  <p className="text-sm font-medium">Loại giao dich</p>
-                  <div className="grid grid-cols-3 gap-2">
+              <div className="">
+                <div className="">
+                  <p className="text-sm font-medium ml-6">Loại giao dich</p>
+                  <div className="grid grid-cols-3  gap-5 p-6">
                     {[
-                      { value: "ALL", label: "Tat ca" },
-                      { value: "INCOME", label: "Thu nhap" },
-                      { value: "EXPENSE", label: "Chi tieu" },
+                      { value: "ALL", label: "Tất cả" },
+                      { value: "INCOME", label: "Thu nhập" },
+                      { value: "EXPENSE", label: "Chi tiêu" },
                     ].map((option) => (
                       <Button
                         key={option.value}
