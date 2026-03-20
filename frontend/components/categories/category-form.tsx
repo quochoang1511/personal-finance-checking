@@ -23,7 +23,6 @@ import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { Category } from "@/springboot-api/models/categoryModel"
-import { addCategory } from "@/springboot-api/services/categoryService"
 
 interface CategoryFormProps {
   open: boolean
@@ -70,7 +69,7 @@ export function CategoryForm({
     <form onSubmit={handleSubmit} className="space-y-4">
       {/* Type Toggle */}
       <div className="space-y-2">
-        <Label>Loai danh muc</Label>
+        <Label>Loại danh mục</Label>
         <div className="grid grid-cols-2 gap-2">
           <button
             type="button"
@@ -96,17 +95,17 @@ export function CategoryForm({
             )}
           >
             <TrendingUp className="h-4 w-4" />
-            Thu nhap
+            Thu nhập
           </button>
         </div>
       </div>
 
       {/* Name */}
       <div className="space-y-2">
-        <Label htmlFor="name">Ten danh muc</Label>
+        <Label htmlFor="name">Tên danh mục</Label>
         <Input
           id="name"
-          placeholder="Nhap ten danh muc..."
+          placeholder="Nhập tên danh mục..."
           value={name}
           onChange={(e) => setName(e.target.value)}
           className="h-11"
@@ -116,10 +115,10 @@ export function CategoryForm({
 
       {/* Description */}
       <div className="space-y-2">
-        <Label htmlFor="description">Mo ta (tuy chon)</Label>
+        <Label htmlFor="description">Mô tả (tùy chọn)</Label>
         <Textarea
           id="description"
-          placeholder="Nhap mo ta danh muc..."
+          placeholder="Nhập mô tả danh mục..."
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={2}
@@ -129,7 +128,7 @@ export function CategoryForm({
       {isMobile ? (
         <DrawerFooter className="px-0 pb-0">
           <Button type="submit" className="h-12">
-            {category ? "Cap nhat" : "Them danh muc"}
+            {category ? "Cập nhật" : "Thêm danh mục"}
           </Button>
           <Button
             type="button"
@@ -137,7 +136,7 @@ export function CategoryForm({
             className="h-12"
             onClick={() => onOpenChange(false)}
           >
-            Huy
+            Hủy
           </Button>
         </DrawerFooter>
       ) : (
@@ -147,10 +146,10 @@ export function CategoryForm({
             variant="outline"
             onClick={() => onOpenChange(false)}
           >
-            Huy
+            Hủy
           </Button>
           <Button type="submit">
-            {category ? "Cap nhat" : "Them danh muc"}
+            {category ? "Cập nhật" : "Thêm danh mục"}
           </Button>
         </DialogFooter>
       )}
@@ -163,7 +162,7 @@ export function CategoryForm({
         <DrawerContent className="px-4 pb-6">
           <DrawerHeader className="px-0">
             <DrawerTitle>
-              {category ? "Chinh sua danh muc" : "Them danh muc moi"}
+              {category ? "Chỉnh sửa danh mục" : "Thêm danh mục mới"}
             </DrawerTitle>
           </DrawerHeader>
           {FormContent}
@@ -177,7 +176,7 @@ export function CategoryForm({
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>
-            {category ? "Chinh sua danh muc" : "Them danh muc moi"}
+          {category ? "Chỉnh sửa danh mục" : "Thêm danh mục mới"}
           </DialogTitle>
         </DialogHeader>
         {FormContent}

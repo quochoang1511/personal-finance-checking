@@ -169,23 +169,23 @@ export default function CategoriesPage() {
         {/* Header - Desktop */}
         <div className="mb-8 hidden items-center justify-between lg:flex">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Danh muc</h1>
-            <p className="text-muted-foreground">
-              Quan ly cac danh muc thu chi cua ban
+            <h1 className="text-3xl font-bold text-foreground">Danh mục </h1>
+            <p>
+              Quản lý danh mục thu chi của bạn
             </p>
           </div>
           <Button onClick={() => setIsFormOpen(true)}>
             <Plus className="mr-2 h-4 w-4" />
-            Them danh muc
+            Thêm danh mục 
           </Button>
         </div>
 
         {/* Header - Mobile */}
         <div className="mb-4 flex items-center justify-between px-4 lg:hidden">
           <div>
-            <h1 className="text-xl font-bold text-foreground">Danh muc</h1>
+            <h1 className="text-xl font-bold text-foreground">Danh mục</h1>
             <p className="text-sm text-muted-foreground">
-              {categories.length} danh muc
+              {categories.length}Danh mục
             </p>
           </div>
         </div>
@@ -196,21 +196,21 @@ export default function CategoriesPage() {
             <TabsList className="grid w-full grid-cols-2 mb-4">
               <TabsTrigger value="expense" className="gap-2">
                 <TrendingDown className="h-4 w-4" />
-                Chi tieu
+                Chi tiêu
                 <Badge variant="secondary" className="ml-1 h-5 px-1.5 text-[10px]">
                   {expenseCategories.length}
                 </Badge>
               </TabsTrigger>
               <TabsTrigger value="income" className="gap-2">
                 <TrendingUp className="h-4 w-4" />
-                Thu nhap
+                Thu nhập
                 <Badge variant="secondary" className="ml-1 h-5 px-1.5 text-[10px]">
                   {incomeCategories.length}
                 </Badge>
               </TabsTrigger>
             </TabsList>
             <TabsContent value="expense" className="mt-0">
-              <CategoryList items={expenseCategories} emptyMessage="Chua co danh muc chi tieu nao" />
+              <CategoryList items={expenseCategories} emptyMessage="Chưa có danh mục chi tiêu nào" />
             </TabsContent>
             <TabsContent value="income" className="mt-0">
               <CategoryList items={incomeCategories} emptyMessage="Chưa có danh mục thu nhập nào" />
@@ -280,10 +280,10 @@ export default function CategoriesPage() {
         >
           <AlertDialogContent className="max-w-[90vw] rounded-xl sm:max-w-md">
             <AlertDialogHeader>
-              <AlertDialogTitle>Xac nhan xoa</AlertDialogTitle>
+              <AlertDialogTitle>Xác nhận xóa</AlertDialogTitle>
               <AlertDialogDescription>
-                Ban co chac chan muon xoa danh muc nay? Hanh dong nay khong the
-                hoan tac.
+                Bạn có chắc muốn xóa danh mục này? Hành động này không thể
+                hoàn tác.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter className="gap-2 sm:gap-0">
