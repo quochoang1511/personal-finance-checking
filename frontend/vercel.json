@@ -1,0 +1,8 @@
+{
+    "rewrites": [
+      {
+        "source": "/api/:path*",
+        "destination": "http://finance-alb-1996393017.us-east-1.elb.amazonaws.com/api/:path*"
+      }
+    ]
+  }
