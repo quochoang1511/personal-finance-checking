@@ -1,4 +1,8 @@
-import type { Category, Transaction, User } from "./types"
+import { Transaction } from "@/springboot-api/models/transactionModel"
+import type { User } from "./types"
+import { useEffect, useState } from "react";
+import { getCategory } from "@/springboot-api/services/categoryService";
+import { Category } from "@/springboot-api/models/categoryModel";
 
 export const mockUser: User = {
   id: 1,
@@ -6,101 +10,7 @@ export const mockUser: User = {
   fullName: "Nguyen Van A",
 }
 
-export const mockCategories: Category[] = [
-  { id: 1, name: "Luong", description: "Thu nhap tu cong viec", defaultType: "INCOME" },
-  { id: 2, name: "Thuong", description: "Thuong thang, thuong tet", defaultType: "INCOME" },
-  { id: 3, name: "Dau tu", description: "Loi nhuan tu dau tu", defaultType: "INCOME" },
-  { id: 4, name: "An uong", description: "Chi phi an uong hang ngay", defaultType: "EXPENSE" },
-  { id: 5, name: "Di lai", description: "Xang xe, taxi, grab", defaultType: "EXPENSE" },
-  { id: 6, name: "Mua sam", description: "Quan ao, do dung", defaultType: "EXPENSE" },
-  { id: 7, name: "Giai tri", description: "Xem phim, du lich", defaultType: "EXPENSE" },
-  { id: 8, name: "Hoa don", description: "Dien, nuoc, internet", defaultType: "EXPENSE" },
-  { id: 9, name: "Suc khoe", description: "Kham benh, thuoc", defaultType: "EXPENSE" },
-  { id: 10, name: "Khac", description: "Cac khoan khac", defaultType: "EXPENSE" },
-]
 
-export const mockTransactions: Transaction[] = [
-  {
-    id: 1,
-    amount: 15000000,
-    description: "Luong thang 3",
-    transactionDate: "2026-03-01T09:00:00",
-    type: "INCOME",
-    userId: 1,
-    categoryId: 1,
-    category: mockCategories[0],
-  },
-  {
-    id: 2,
-    amount: 2000000,
-    description: "Thuong quy 1",
-    transactionDate: "2026-03-05T10:30:00",
-    type: "INCOME",
-    userId: 1,
-    categoryId: 2,
-    category: mockCategories[1],
-  },
-  {
-    id: 3,
-    amount: 500000,
-    description: "An nha hang cuoi tuan",
-    transactionDate: "2026-03-08T19:00:00",
-    type: "EXPENSE",
-    userId: 1,
-    categoryId: 4,
-    category: mockCategories[3],
-  },
-  {
-    id: 4,
-    amount: 1200000,
-    description: "Do xang xe",
-    transactionDate: "2026-03-10T08:00:00",
-    type: "EXPENSE",
-    userId: 1,
-    categoryId: 5,
-    category: mockCategories[4],
-  },
-  {
-    id: 5,
-    amount: 3500000,
-    description: "Mua quan ao moi",
-    transactionDate: "2026-03-11T14:30:00",
-    type: "EXPENSE",
-    userId: 1,
-    categoryId: 6,
-    category: mockCategories[5],
-  },
-  {
-    id: 6,
-    amount: 800000,
-    description: "Xem phim va an uong",
-    transactionDate: "2026-03-12T20:00:00",
-    type: "EXPENSE",
-    userId: 1,
-    categoryId: 7,
-    category: mockCategories[6],
-  },
-  {
-    id: 7,
-    amount: 1500000,
-    description: "Tien dien thang 2",
-    transactionDate: "2026-03-13T10:00:00",
-    type: "EXPENSE",
-    userId: 1,
-    categoryId: 8,
-    category: mockCategories[7],
-  },
-  {
-    id: 8,
-    amount: 500000,
-    description: "Loi nhuan co phieu",
-    transactionDate: "2026-03-13T11:00:00",
-    type: "INCOME",
-    userId: 1,
-    categoryId: 3,
-    category: mockCategories[2],
-  },
-]
 
 export function calculateStats(transactions: Transaction[]) {
   const totalIncome = transactions
@@ -121,8 +31,8 @@ export function calculateStats(transactions: Transaction[]) {
 
 export function getMonthlyData(transactions: Transaction[]) {
   const months = [
-    "Thang 1", "Thang 2", "Thang 3", "Thang 4", "Thang 5", "Thang 6",
-    "Thang 7", "Thang 8", "Thang 9", "Thang 10", "Thang 11", "Thang 12"
+    "Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+    "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"
   ]
 
   return months.map((month, index) => {
@@ -143,13 +53,25 @@ export function getMonthlyData(transactions: Transaction[]) {
   })
 }
 
-export function getCategoryStats(transactions: Transaction[]) {
+export function getCategoryStats(transactions: Transaction[],
+  categories: Category[],
+) {
+
+  const currentUserId = 1
+
+  const categoryNameById = new Map(
+    categories.map((c) => [c.categoryId, c.name] as const)
+  )
+  const getCategoryName = (categoryId?: number) => {
+    if (!categoryId) return "Khác"
+    return categoryNameById.get(categoryId) ?? "Khác"
+  }
   const categoryMap = new Map<string, number>()
 
   transactions
     .filter((t) => t.type === "EXPENSE")
     .forEach((t) => {
-      const categoryName = t.category?.name || "Khac"
+      const categoryName = getCategoryName(t.categoryId) || "Khác"
       const current = categoryMap.get(categoryName) || 0
       categoryMap.set(categoryName, current + t.amount)
     })

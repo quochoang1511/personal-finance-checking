@@ -83,7 +83,7 @@ export function CategoryForm({
             )}
           >
             <TrendingDown className="h-4 w-4" />
-            Chi tieu
+            Chi tiêu
           </button>
           <button
             type="button"

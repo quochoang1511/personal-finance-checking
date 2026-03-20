@@ -20,9 +20,9 @@ import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/co
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 
 const navigation = [
-  { name: "Tong quan", href: "/", icon: LayoutDashboard, description: "Xem tong quan tai chinh" },
-  { name: "Giao dich", href: "/transactions", icon: Receipt, description: "Quan ly thu chi" },
-  { name: "Danh muc", href: "/categories", icon: Tags, description: "Phan loai giao dich" },
+  { name: "Tổng quan", href: "/", icon: LayoutDashboard, description: "Xem tổng quan tài chính" },
+  { name: "Giao dịch", href: "/transactions", icon: Receipt, description: "Quản lý thu chi" },
+  { name: "Danh mục", href: "/categories", icon: Tags, description: "Phân loại giao dịch" },
 ]
 
 export function MobileHeader() {
@@ -35,7 +35,7 @@ export function MobileHeader() {
         <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary/80 shadow-sm">
           <Wallet className="h-4 w-4 text-primary-foreground" />
         </div>
-        <span className="text-base font-semibold tracking-tight">FinanceApp</span>
+        <span className="text-base font-semibold tracking-tight">Finance App</span>
       </div>
 
       <Sheet open={open} onOpenChange={setOpen}>
@@ -118,11 +118,11 @@ export function MobileHeader() {
               <div className="grid grid-cols-2 gap-2">
                 <button className="flex items-center justify-center gap-2 rounded-xl bg-muted px-4 py-3 text-sm font-medium transition-colors hover:bg-muted/80 active:scale-[0.98]">
                   <Settings className="h-4 w-4" />
-                  Cai dat
+                  Cài đặt
                 </button>
                 <button className="flex items-center justify-center gap-2 rounded-xl bg-destructive/10 px-4 py-3 text-sm font-medium text-destructive transition-colors hover:bg-destructive/20 active:scale-[0.98]">
                   <LogOut className="h-4 w-4" />
-                  Dang xuat
+                  Đăng xuất
                 </button>
               </div>
             </div>

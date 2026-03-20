@@ -21,7 +21,6 @@ export const getCategory = async (id: number): Promise<APIResponse<Category[]>> 
     }
 }
 
-
 export const addCategory = async (
     categoryRequest: CreateCategoryRequest
 ) => {
@@ -37,7 +36,6 @@ export const addCategory = async (
     }
 }
 
-
 export const deleteCategory = async (id: number) => {
     try {
         const response: AxiosResponse<APIResponse<Category>> = await request.delete(`categories/${id}`);
@@ -47,7 +45,6 @@ export const deleteCategory = async (id: number) => {
         return null;
     }
 }
-
 
 export const updateCategory = async (
     id: number,

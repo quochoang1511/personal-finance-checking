@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowDownLeft, ArrowUpRight, MoreHorizontal, Pencil, Trash2 } from "lucide-react"
+import { ArrowDownLeft, ArrowUpRight, MoreHorizontal, Pencil, Trash2, TrendingDown, TrendingDownIcon, TrendingUp } from "lucide-react"
 import {
   Table,
   TableBody,
@@ -19,11 +19,24 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Transaction } from "@/springboot-api/models/transactionModel"
-
+import { useState } from "react"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import { deleteTransaction } from "@/springboot-api/services/transactionService"
+import { toast } from "sonner"
 interface TransactionTableProps {
   transactions: Transaction[]
   onEdit: (transaction: Transaction) => void
   onDelete: (id: number) => void
+  getCategoryName: (categoryId?: number) => string
 }
 
 function formatCurrency(amount: number) {
@@ -58,10 +71,10 @@ function formatShortDate(dateString: string) {
   yesterday.setDate(yesterday.getDate() - 1)
 
   if (date.toDateString() === today.toDateString()) {
-    return "Hom nay"
+    return "Hôm nay"
   }
   if (date.toDateString() === yesterday.toDateString()) {
-    return "Hom qua"
+    return "Hôm qua"
   }
   return date.toLocaleDateString("vi-VN", {
     day: "2-digit",
@@ -73,13 +86,35 @@ export function TransactionTable({
   transactions,
   onEdit,
   onDelete,
+  getCategoryName,
 }: TransactionTableProps) {
+  const [deletingTransactionId, setDeletingTransactionId] = useState<number | null>(
+    null
+  )
   const sortedTransactions = [...transactions].sort(
     (a, b) =>
       new Date(b.transactionDate).getTime() -
       new Date(a.transactionDate).getTime()
   )
-
+  function formatDateTime(dateString: string) {
+    return new Date(dateString).toLocaleString("vi-VN", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    })
+  }
+  const handleDeleteCategory = async () => {
+    if (deletingTransactionId === null) return
+    const result = await deleteTransaction(deletingTransactionId)
+    if (result?.success === true) {
+      onDelete(deletingTransactionId)
+      toast.success(result.message);
+      setDeletingTransactionId(null)
+    }
+  }
   return (
     <>
       {/* Mobile Card List */}
@@ -87,7 +122,7 @@ export function TransactionTable({
         {sortedTransactions.length === 0 ? (
           <Card>
             <CardContent className="py-12 text-center">
-              <p className="text-muted-foreground">Chua co giao dich nao</p>
+              <p className="text-muted-foreground">Chưa có giao dịch nào</p>
             </CardContent>
           </Card>
         ) : (
@@ -96,40 +131,38 @@ export function TransactionTable({
               <CardContent className="p-0">
                 <div className="flex items-center gap-3 p-3">
                   <div
-                    className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${
-                      transaction.type === "INCOME"
-                        ? "bg-income/15"
-                        : "bg-expense/15"
-                    }`}
+                    className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${transaction.type === "INCOME"
+                      ? "bg-income/15"
+                      : "bg-expense/15"
+                      }`}
                   >
                     {transaction.type === "INCOME" ? (
-                      <ArrowDownLeft className="h-5 w-5 text-income" />
+                      <TrendingUp className="h-5 w-5 text-income" />
                     ) : (
-                      <ArrowUpRight className="h-5 w-5 text-expense" />
+                      <TrendingDownIcon className="h-5 w-5 text-expense" />
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-sm font-medium">
-                          {transaction.description || transaction.categoryId || "Giao dich"}
+                          {transaction.description || "Không có mô tả"}
                         </p>
                         <div className="mt-1 flex items-center gap-2">
                           <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
-                            {transaction.categoryId || "Khac"}
+                            {getCategoryName(transaction.categoryId) || "Khác"}
                           </Badge>
                           <span className="text-xs text-muted-foreground">
-                            {/* {formatShortDate(transaction.transactionDate)} */}
+                            {formatDateTime(transaction.transactionDate)}
                           </span>
                         </div>
                       </div>
                       <div className="flex items-center gap-1">
                         <p
-                          className={`shrink-0 text-sm font-semibold tabular-nums ${
-                            transaction.type === "INCOME"
-                              ? "text-income"
-                              : "text-expense"
-                          }`}
+                          className={`shrink-0 text-sm font-semibold tabular-nums ${transaction.type === "INCOME"
+                            ? "text-income"
+                            : "text-expense"
+                            }`}
                         >
                           {transaction.type === "INCOME" ? "+" : "-"}
                           {formatCompact(transaction.amount)}
@@ -144,14 +177,14 @@ export function TransactionTable({
                           <DropdownMenuContent align="end">
                             <DropdownMenuItem onClick={() => onEdit(transaction)}>
                               <Pencil className="mr-2 h-4 w-4" />
-                              Chinh sua
+                              Chỉnh sửa
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               className="text-destructive focus:text-destructive"
-                              onClick={() => onDelete(transaction.transactionId)}
+                              onClick={() => setDeletingTransactionId(transaction.transactionId)}
                             >
                               <Trash2 className="mr-2 h-4 w-4" />
-                              Xoa
+                              Xóa
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
@@ -171,10 +204,10 @@ export function TransactionTable({
           <TableHeader>
             <TableRow>
               <TableHead className="w-12"></TableHead>
-              <TableHead>Mo ta</TableHead>
-              <TableHead>Danh muc</TableHead>
-              <TableHead>Ngay</TableHead>
-              <TableHead className="text-right">So tien</TableHead>
+              <TableHead>Mô tả</TableHead>
+              <TableHead>Danh mục</TableHead>
+              <TableHead>Ngày</TableHead>
+              <TableHead className="text-right">Số tiền</TableHead>
               <TableHead className="w-12"></TableHead>
             </TableRow>
           </TableHeader>
@@ -182,7 +215,7 @@ export function TransactionTable({
             {sortedTransactions.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className="py-12 text-center">
-                  <p className="text-muted-foreground">Chua co giao dich nao</p>
+                  <p className="text-muted-foreground">Chưa có giao dịch nào</p>
                 </TableCell>
               </TableRow>
             ) : (
@@ -190,36 +223,34 @@ export function TransactionTable({
                 <TableRow key={transaction.transactionId}>
                   <TableCell>
                     <div
-                      className={`rounded-full p-2 ${
-                        transaction.type === "INCOME"
-                          ? "bg-income/10"
-                          : "bg-expense/10"
-                      }`}
+                      className={`rounded-full p-2 ${transaction.type === "INCOME"
+                        ? "bg-income/10"
+                        : "bg-expense/10"
+                        }`}
                     >
                       {transaction.type === "INCOME" ? (
-                        <ArrowDownLeft className="h-4 w-4 text-income" />
+                        <TrendingUp className="h-4 w-4 text-income" />
                       ) : (
-                        <ArrowUpRight className="h-4 w-4 text-expense" />
+                        <TrendingDown className="h-4 w-4 text-expense" />
                       )}
                     </div>
                   </TableCell>
                   <TableCell className="font-medium">
-                    {transaction.description || "-"}
+                    {transaction.description || "Không có mô tả"}
                   </TableCell>
                   <TableCell>
                     <Badge variant="secondary">
-                      {transaction.categoryId || "Khac"}
+                      {getCategoryName(transaction.categoryId) || "Khac"}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-muted-foreground">
-                    {/* {formatDate(transaction.transactionDate)} */}
+                    {formatDateTime(transaction.transactionDate)}
                   </TableCell>
                   <TableCell
-                    className={`text-right font-semibold ${
-                      transaction.type === "INCOME"
-                        ? "text-income"
-                        : "text-expense"
-                    }`}
+                    className={`text-right font-semibold ${transaction.type === "INCOME"
+                      ? "text-income"
+                      : "text-expense"
+                      }`}
                   >
                     {transaction.type === "INCOME" ? "+" : "-"}
                     {formatCurrency(transaction.amount)}
@@ -239,10 +270,10 @@ export function TransactionTable({
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           className="text-destructive focus:text-destructive"
-                          onClick={() => onDelete(transaction.transactionId)}
+                          onClick={() => setDeletingTransactionId(transaction.transactionId)}
                         >
                           <Trash2 className="mr-2 h-4 w-4" />
-                          Xoa
+                          Xóa
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -253,6 +284,31 @@ export function TransactionTable({
           </TableBody>
         </Table>
       </div>
+
+      {/* Delete Confirmation */}
+      <AlertDialog
+        open={deletingTransactionId !== null}
+        onOpenChange={() => setDeletingTransactionId(null)}
+      >
+        <AlertDialogContent className="max-w-[90vw] rounded-xl sm:max-w-md">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Xác nhận xóa</AlertDialogTitle>
+            <AlertDialogDescription>
+              Bạn có chắc muốn xóa giao dịch này? Hành động này không thể
+              hoàn tác.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="gap-2 sm:gap-0">
+            <AlertDialogCancel>Hủy</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteCategory}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Xoa
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   )
 }

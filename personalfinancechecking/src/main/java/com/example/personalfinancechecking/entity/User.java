@@ -16,8 +16,9 @@ public class User {
 
     private String email;
 
+    @Column(name = "password",nullable = true)
     private String password;  
-    @Column(name = "name", columnDefinition = "NVARCHAR(255)")
+    @Column(name = "name")
     private String fullName;
 
 }

@@ -49,7 +49,7 @@ export function OverviewChart({ data }: OverviewChartProps) {
     <Card className="col-span-full lg:col-span-2">
       <CardHeader className="pb-2 lg:pb-4">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base lg:text-lg">Thu chi theo thang</CardTitle>
+          <CardTitle className="text-base lg:text-lg">Thu chi theo tháng</CardTitle>
           {/* Mobile Navigation */}
           <div className="flex items-center gap-1 lg:hidden">
             <Button
@@ -115,14 +115,14 @@ export function OverviewChart({ data }: OverviewChartProps) {
               />
               <Bar
                 dataKey="income"
-                name="Thu nhap"
+                name="Thu nhập"
                 fill="oklch(0.55 0.18 160)"
                 radius={[4, 4, 0, 0]}
                 maxBarSize={24}
               />
               <Bar
                 dataKey="expense"
-                name="Chi tieu"
+                name="Chi tiêu"
                 fill="oklch(0.55 0.22 25)"
                 radius={[4, 4, 0, 0]}
                 maxBarSize={24}
@@ -167,15 +167,15 @@ export function OverviewChart({ data }: OverviewChartProps) {
               <Legend />
               <Bar
                 dataKey="income"
-                name="Thu nhap"
+                name="Thu nhập"
                 fill="oklch(0.55 0.18 160)"
-                radius={[4, 4, 0, 0]}
+                radius={[10, 10, 0, 0]}
               />
               <Bar
                 dataKey="expense"
-                name="Chi tieu"
+                name="Chi tiêu"
                 fill="oklch(0.55 0.22 25)"
-                radius={[4, 4, 0, 0]}
+                radius={[10, 10, 0, 0]}
               />
             </BarChart>
           </ResponsiveContainer>
