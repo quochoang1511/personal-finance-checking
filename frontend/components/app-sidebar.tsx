@@ -14,7 +14,9 @@ import { cn } from "@/lib/utils"
 import { mockUser } from "@/lib/mock-data"
 
 const navigation = [
+  
   { name: "Tổng quan", href: "/", icon: LayoutDashboard },
+  { name: "Tổng quan", href: "/authentication", icon: LayoutDashboard },
   { name: "Giao dịch", href: "/transactions", icon: Receipt },
   { name: "Danh mục", href: "/categories", icon: Tags },
 ]

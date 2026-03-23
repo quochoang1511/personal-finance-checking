@@ -3,6 +3,7 @@ package com.example.personalfinancechecking.service;
 import org.springframework.stereotype.Service;
 
 import com.example.personalfinancechecking.dto.UserDTO;
+import com.example.personalfinancechecking.dto.UserLoginDTO;
 import com.example.personalfinancechecking.entity.APIResponse;
 import com.example.personalfinancechecking.entity.User;
 import com.example.personalfinancechecking.repository.UserRepository;
@@ -37,12 +38,26 @@ public class UserService {
         }
     }
 
+    public APIResponse Login(UserLoginDTO userLoginDTO) {
+        User user = userRepository.findByEmail(userLoginDTO.getEmail()).orElse(null);
+        UserLoginDTO userDTO = new UserLoginDTO();
+        if (user == null) {
+            return new APIResponse(false, "Tài khoản không tồn tại", null);
+        } else {
+            if (user.getEmail().equals(userLoginDTO.getEmail())
+                    && user.getPassword().equals(userLoginDTO.getPassword())) {
+                return new APIResponse(true, "Đăng nhập thành công", userDTO.getEmail());
+            }
+            return new APIResponse(false, "Sai Mat Khau", userDTO);
+        }
+    }
+
     public APIResponse createUser(User user) {
         boolean emailExists = userRepository.findByEmail(user.getEmail()).isPresent();
         if (emailExists) {
             return new APIResponse(false, "Email already exists", null);
         }
-        if (user.getPassword()==null) {
+        if (user.getPassword() == null) {
             return new APIResponse(false, "Password cant be null ", null);
         }
         user.setUserId(null);

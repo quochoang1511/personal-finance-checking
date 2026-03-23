@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import com.example.personalfinancechecking.dto.UserLoginDTO;
 import com.example.personalfinancechecking.entity.APIResponse;
 
 @RestController
@@ -34,6 +36,11 @@ public class UserController {
     @GetMapping("/email/{email}")
     public APIResponse getUserByEmail(@PathVariable String email) {
         return userService.findByEmail(email);
+    }
+
+    @GetMapping("/login")
+    public APIResponse Login(@PathVariable UserLoginDTO userLoginDTO) {
+        return userService.Login(userLoginDTO);
     }
 
     @PostMapping
