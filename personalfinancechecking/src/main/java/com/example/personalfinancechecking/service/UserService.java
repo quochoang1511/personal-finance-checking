@@ -58,7 +58,7 @@ public class UserService {
             return new ApiResponse(false, "Email already exists", null);
         }
         if (user.getPassword() == null) {
-            return new ApiResponse(false, "Password cant be null ", null);
+            return new ApiResponse(false, "Mật khẩu không không thể để trống ", null);
         }
         user.setUserId(null);
         user = userRepository.save(user);
