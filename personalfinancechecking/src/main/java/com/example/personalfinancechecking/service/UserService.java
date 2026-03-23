@@ -55,7 +55,7 @@ public class UserService {
     public ApiResponse createUser(User user) {
         boolean emailExists = userRepository.findByEmail(user.getEmail()).isPresent();
         if (emailExists) {
-            return new ApiResponse(false, "Email already exists", null);
+            return new ApiResponse(false, "Email đã tồn tại", null);
         }
         if (user.getPassword() == null) {
             return new ApiResponse(false, "Mật khẩu không không thể để trống ", null);
