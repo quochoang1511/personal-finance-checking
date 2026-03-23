@@ -62,7 +62,7 @@ public class UserService {
         }
         user.setUserId(null);
         user = userRepository.save(user);
-        return new ApiResponse(true, "Tạo người dùng thành công", user);
+        return new ApiResponse(true, "Tạo người dùng thànlh công", user);
     }
 
     public ApiResponse getUsers() {
