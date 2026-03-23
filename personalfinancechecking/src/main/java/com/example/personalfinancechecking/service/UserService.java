@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.personalfinancechecking.dto.UserDTO;
 import com.example.personalfinancechecking.dto.UserLoginDTO;
-import com.example.personalfinancechecking.entity.APIResponse;
+import com.example.personalfinancechecking.entity.ApiResponse;
 import com.example.personalfinancechecking.entity.User;
 import com.example.personalfinancechecking.repository.UserRepository;
 
@@ -16,57 +16,57 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public APIResponse findById(Long id) {
+    public ApiResponse findById(Long id) {
         User user = userRepository.findById(id).orElse(null);
         UserDTO userDTO = new UserDTO();
         if (user != null) {
             userDTO = new UserDTO(user.getUserId(), user.getEmail(), user.getFullName());
-            return new APIResponse(true, "User found", userDTO);
+            return new ApiResponse(true, "User found", userDTO);
         } else {
-            return new APIResponse(false, "User not found", null);
+            return new ApiResponse(false, "User not found", null);
         }
     }
 
-    public APIResponse findByEmail(String email) {
+    public ApiResponse findByEmail(String email) {
         User user = userRepository.findByEmail(email).orElse(null);
         UserDTO userDTO = new UserDTO();
         if (user != null) {
             userDTO = new UserDTO(user.getUserId(), user.getEmail(), user.getFullName());
-            return new APIResponse(true, "User found", userDTO);
+            return new ApiResponse(true, "User found", userDTO);
         } else {
-            return new APIResponse(false, "User not found", null);
+            return new ApiResponse(false, "User not found", null);
         }
     }
 
-    public APIResponse Login(UserLoginDTO userLoginDTO) {
+    public ApiResponse Login(UserLoginDTO userLoginDTO) {
         User user = userRepository.findByEmail(userLoginDTO.getEmail()).orElse(null);
         UserLoginDTO userDTO = new UserLoginDTO();
         if (user == null) {
-            return new APIResponse(false, "Tài khoản không tồn tại", null);
+            return new ApiResponse(false, "Tài khoản không tồn tại", null);
         } else {
             if (user.getEmail().equals(userLoginDTO.getEmail())
                     && user.getPassword().equals(userLoginDTO.getPassword())) {
-                return new APIResponse(true, "Đăng nhập thành công", userDTO.getEmail());
+                return new ApiResponse(true, "Đăng nhập thành công", userDTO.getEmail());
             }
-            return new APIResponse(false, "Sai Mat Khau", userDTO);
+            return new ApiResponse(false, "Sai Mat Khau", userDTO);
         }
     }
 
-    public APIResponse createUser(User user) {
+    public ApiResponse createUser(User user) {
         boolean emailExists = userRepository.findByEmail(user.getEmail()).isPresent();
         if (emailExists) {
-            return new APIResponse(false, "Email already exists", null);
+            return new ApiResponse(false, "Email already exists", null);
         }
         if (user.getPassword() == null) {
-            return new APIResponse(false, "Password cant be null ", null);
+            return new ApiResponse(false, "Password cant be null ", null);
         }
         user.setUserId(null);
         user = userRepository.save(user);
-        return new APIResponse(true, "User created successfully", user);
+        return new ApiResponse(true, "User created successfully", user);
     }
 
-    public APIResponse getUsers() {
+    public ApiResponse getUsers() {
         var user = userRepository.findAll();
-        return new APIResponse(true, "User created successfully", user);
+        return new ApiResponse(true, "User created successfully", user);
     }
 }

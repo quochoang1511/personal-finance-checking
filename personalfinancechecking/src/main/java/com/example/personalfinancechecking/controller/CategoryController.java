@@ -1,6 +1,6 @@
 package com.example.personalfinancechecking.controller;
 
-import com.example.personalfinancechecking.entity.APIResponse;
+import com.example.personalfinancechecking.entity.ApiResponse;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,31 +26,31 @@ public class CategoryController {
     }
 
     @GetMapping
-    public APIResponse getAllCategories() throws Exception {
+    public ApiResponse getAllCategories() throws Exception {
         return categoryService.getAllCategories();
     }
 
     @PostMapping
-    public APIResponse addCategory(@RequestBody Category entity) throws Exception {
+    public ApiResponse addCategory(@RequestBody Category entity) throws Exception {
         return categoryService.addCategory(entity);
     }
 
     @GetMapping("/{id}")
-    public APIResponse getCategory(@PathVariable Long id) {
+    public ApiResponse getCategory(@PathVariable Long id) {
         return categoryService.getCategoryById(id);
     }
 
     @GetMapping("/user/{id}")
-    public APIResponse getCategoryByUserId(@PathVariable Long id) {
+    public ApiResponse getCategoryByUserId(@PathVariable Long id) {
         return categoryService.getCategoryByUserId(id);
     }
     @PutMapping("/{id}")
-    public APIResponse updateCategory(@PathVariable Long id, @RequestBody  Category updatedCategory) throws Exception {
+    public ApiResponse updateCategory(@PathVariable Long id, @RequestBody  Category updatedCategory) throws Exception {
         return categoryService.updateCategory(id, updatedCategory);
     }
 
     @DeleteMapping("/{id}")
-    public APIResponse deleteCategory(@PathVariable Long id) {
+    public ApiResponse deleteCategory(@PathVariable Long id) {
         return categoryService.deleteCategory(id);
     }
 }
