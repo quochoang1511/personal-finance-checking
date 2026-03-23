@@ -21,9 +21,9 @@ public class UserService {
         UserDTO userDTO = new UserDTO();
         if (user != null) {
             userDTO = new UserDTO(user.getUserId(), user.getEmail(), user.getFullName());
-            return new ApiResponse(true, "User found", userDTO);
+            return new ApiResponse(true, "Tìm thấy người dùng", userDTO);
         } else {
-            return new ApiResponse(false, "User not found", null);
+            return new ApiResponse(false, "Không tìm thấy người dùng", null);
         }
     }
 
@@ -32,9 +32,9 @@ public class UserService {
         UserDTO userDTO = new UserDTO();
         if (user != null) {
             userDTO = new UserDTO(user.getUserId(), user.getEmail(), user.getFullName());
-            return new ApiResponse(true, "User found", userDTO);
+            return new ApiResponse(true, "Tìm thấy người dùng", userDTO);
         } else {
-            return new ApiResponse(false, "User not found", null);
+            return new ApiResponse(false, "Không tìm thấy người dùng", null);
         }
     }
 
@@ -48,7 +48,7 @@ public class UserService {
                     && user.getPassword().equals(userLoginDTO.getPassword())) {
                 return new ApiResponse(true, "Đăng nhập thành công", userDTO.getEmail());
             }
-            return new ApiResponse(false, "Sai Mat Khau", userDTO);
+            return new ApiResponse(false, "Sai mật khẩu", userDTO);
         }
     }
 
@@ -67,6 +67,6 @@ public class UserService {
 
     public ApiResponse getUsers() {
         var user = userRepository.findAll();
-        return new ApiResponse(true, "User created successfully", user);
+        return new ApiResponse(true, "Tìm thấy danh sách người dùng", user);
     }
 }

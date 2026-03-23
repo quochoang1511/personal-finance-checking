@@ -38,8 +38,8 @@ public class UserController {
         return userService.findByEmail(email);
     }
 
-    @GetMapping("/login")
-    public ApiResponse Login(@PathVariable UserLoginDTO userLoginDTO) {
+    @PostMapping("/login")
+    public ApiResponse Login(@RequestBody UserLoginDTO userLoginDTO) {
         return userService.Login(userLoginDTO);
     }
 

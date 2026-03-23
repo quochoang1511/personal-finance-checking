@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.personalfinancechecking.service.CategoryService;
 import com.example.personalfinancechecking.entity.Category;
-import com.example.personalfinancechecking.entity.User;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
